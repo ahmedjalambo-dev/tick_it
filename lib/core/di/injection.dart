@@ -1,0 +1,37 @@
+import 'package:get_it/get_it.dart';
+import 'package:tick_it/features/sign_in/cubit/sign_in_cubit.dart';
+import 'package:tick_it/features/sign_in/data/repos/sign_in_repo.dart';
+import 'package:tick_it/features/sign_in/data/services/sign_in_api_service.dart';
+import 'package:tick_it/features/sign_up/cubit/sign_up_cubit.dart';
+import 'package:tick_it/features/sign_up/data/repos/sign_up_repo.dart';
+import 'package:tick_it/features/sign_up/data/services/sign_up_api_service.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
+
+// Feature Imports
+
+import 'package:tick_it/features/home/cubit/home_cubit.dart';
+
+final getIt = GetIt.instance;
+
+Future<void> setupGetIt() async {
+  // 1. External Services (Supabase)
+  final supabase = Supabase.instance.client;
+  getIt.registerLazySingleton<SupabaseClient>(() => supabase);
+
+  // 2. Auth - Login
+  getIt.registerLazySingleton<SignInApiService>(
+    () => SignInApiService(getIt()),
+  );
+  getIt.registerLazySingleton<SignInRepo>(() => SignInRepo(getIt()));
+  getIt.registerFactory<SignInCubit>(() => SignInCubit(getIt()));
+
+  // 3. Auth - Signup
+  getIt.registerLazySingleton<SignUpApiService>(
+    () => SignUpApiService(getIt()),
+  );
+  getIt.registerLazySingleton<SignUpRepo>(() => SignUpRepo(getIt()));
+  getIt.registerFactory<SignUpCubit>(() => SignUpCubit(getIt()));
+
+  // 4. Home
+  getIt.registerFactory<HomeCubit>(() => HomeCubit(getIt()));
+}

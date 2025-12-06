@@ -6,7 +6,7 @@ import 'package:tick_it/core/routes/my_routes.dart';
 import 'package:tick_it/core/supabase_config.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
-import 'core/theme/app_theme.dart';
+import 'core/theme/my_theme.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();

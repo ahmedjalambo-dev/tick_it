@@ -5,7 +5,7 @@ class MyTheme {
     useMaterial3: true,
     brightness: Brightness.dark,
     colorScheme: const ColorScheme.dark(
-      primary: Color(0xFF2a7352),
+      primary: Color(0xFFFFC500),
       secondary: Color(0xFF1C1C1C),
       surface: Color(0xFF1E1E1E),
       error: Color(0xFFCF6679),

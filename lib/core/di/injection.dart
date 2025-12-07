@@ -10,6 +10,9 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 // Feature Imports
 
 import 'package:tick_it/features/home/cubit/home_cubit.dart';
+import 'package:tick_it/features/verify_otp/cubit/verify_otp_cubit.dart';
+import 'package:tick_it/features/verify_otp/data/repos/verify_otp_repo.dart';
+import 'package:tick_it/features/verify_otp/data/services/verify_otp_api_service.dart';
 
 final getIt = GetIt.instance;
 
@@ -31,6 +34,15 @@ Future<void> setupGetIt() async {
   );
   getIt.registerLazySingleton<SignUpRepo>(() => SignUpRepo(getIt()));
   getIt.registerFactory<SignUpCubit>(() => SignUpCubit(getIt()));
+
+  // 4. Auth - Verify OTP (Added)
+  getIt.registerLazySingleton<VerifyOtpApiService>(
+    () => VerifyOtpApiService(getIt()),
+  );
+  getIt.registerLazySingleton<VerifyOtpRepo>(() => VerifyOtpRepo(getIt()));
+  getIt.registerFactoryParam<VerifyOtpCubit, String, void>(
+    (email, _) => VerifyOtpCubit(getIt(), email),
+  );
 
   // 4. Home
   getIt.registerFactory<HomeCubit>(() => HomeCubit(getIt()));

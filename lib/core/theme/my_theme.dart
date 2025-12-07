@@ -40,7 +40,7 @@ class MyTheme {
       ),
       focusedBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(12),
-        borderSide: const BorderSide(color: Color(0xFF2a7352), width: 2),
+        borderSide: const BorderSide(color: Color(0xFFFFC500), width: 2),
       ),
       enabledBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(12),

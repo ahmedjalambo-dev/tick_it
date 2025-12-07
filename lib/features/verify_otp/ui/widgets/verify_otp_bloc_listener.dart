@@ -2,16 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tick_it/core/extentions/extentions.dart';
 import 'package:tick_it/core/routes/my_routes.dart';
-import 'package:tick_it/features/sign_up/cubit/sign_up_cubit.dart';
-import 'package:tick_it/features/sign_up/cubit/sign_up_state.dart'
-    hide Success, Failure;
+import '../../cubit/verify_otp_cubit.dart';
+import '../../cubit/verify_otp_state.dart';
 
-class SignUpBlocListener extends StatelessWidget {
-  const SignUpBlocListener({super.key});
+class VerifyOtpBlocListener extends StatelessWidget {
+  const VerifyOtpBlocListener({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return BlocListener<SignUpCubit, SignUpState>(
+    return BlocListener<VerifyOtpCubit, VerifyOtpState>(
       listener: (context, state) {
         state.whenOrNull(
           loading: () {
@@ -23,19 +22,10 @@ class SignUpBlocListener extends StatelessWidget {
             );
           },
           success: (message) {
-            Navigator.of(context).pop(); // Close loading dialog
-
-            // Get the email from the Cubit to pass it to the next screen
-            final email = context
-                .read<SignUpCubit>()
-                .emailController
-                .text
-                .trim();
-
-            // Navigate to Verify OTP Screen
+            Navigator.of(context).pop(); // Close dialog
+            // Navigate to home after verification
             context.pushNamedAndRemoveUntil(
-              MyRoutes.verifyOtp,
-              arguments: email,
+              MyRoutes.home,
               predicate: (route) => false,
             );
           },

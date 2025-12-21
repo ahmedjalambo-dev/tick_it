@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:tick_it/core/di/injection.dart';
 import 'package:tick_it/core/routes/my_router.dart';
 import 'package:tick_it/core/routes/my_routes.dart';
@@ -10,6 +11,9 @@ import 'core/theme/my_theme.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  // Load environment variables from .env file
+  await dotenv.load();
 
   // Initialize Supabase
   await Supabase.initialize(url: supabaseUrl, anonKey: supabaseAnonKey);

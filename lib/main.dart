@@ -34,7 +34,8 @@ class MyApp extends StatelessWidget {
       designSize: const Size(375, 812),
       builder: (context, child) {
         return MaterialApp(
-          title: 'Supabase Auth',
+          debugShowCheckedModeBanner: false,
+          title: 'Tick It',
           theme: MyTheme.darkTheme,
           onGenerateRoute: myRouter.generateRoute,
           initialRoute: initialRoute,

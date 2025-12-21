@@ -5,7 +5,7 @@ class MyTheme {
     useMaterial3: true,
     brightness: Brightness.dark,
     colorScheme: const ColorScheme.dark(
-      primary: Color(0xFFFFC500),
+      primary: Color(0xFF3ecf8e),
       secondary: Color(0xFF1C1C1C),
       surface: Color(0xFF1E1E1E),
       error: Color(0xFFCF6679),
@@ -40,7 +40,7 @@ class MyTheme {
       ),
       focusedBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(12),
-        borderSide: const BorderSide(color: Color(0xFFFFC500), width: 2),
+        borderSide: const BorderSide(color: Color(0xFF3ecf8e), width: 2),
       ),
       enabledBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(12),

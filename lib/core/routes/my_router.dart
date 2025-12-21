@@ -8,6 +8,7 @@ import 'package:tick_it/features/sign_in/cubit/sign_in_cubit.dart';
 import 'package:tick_it/features/sign_in/ui/sign_in_screen.dart';
 import 'package:tick_it/features/sign_up/cubit/sign_up_cubit.dart';
 import 'package:tick_it/features/sign_up/ui/sign_up_screen.dart';
+import 'package:tick_it/features/todo/cubit/todo_cubit.dart';
 import 'package:tick_it/features/verify_otp/cubit/verify_otp_cubit.dart';
 import 'package:tick_it/features/verify_otp/ui/verify_otp_screen.dart';
 
@@ -38,8 +39,15 @@ class MyRouter {
         );
       case MyRoutes.home:
         return MaterialPageRoute(
-          builder: (_) => BlocProvider(
-            create: (context) => getIt<HomeCubit>(),
+          builder: (_) => MultiBlocProvider(
+            providers: [
+              // Keep existing HomeCubit for logout logic
+              BlocProvider(create: (context) => getIt<HomeCubit>()),
+              // Add TodoCubit and fetch immediately
+              BlocProvider(
+                create: (context) => getIt<TodoCubit>()..fetchTodos(),
+              ),
+            ],
             child: const HomeScreen(),
           ),
         );

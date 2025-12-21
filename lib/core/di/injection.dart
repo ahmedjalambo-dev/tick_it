@@ -10,6 +10,9 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 // Feature Imports
 
 import 'package:tick_it/features/home/cubit/home_cubit.dart';
+import 'package:tick_it/features/todo/cubit/todo_cubit.dart';
+import 'package:tick_it/features/todo/data/repos/todo_repo.dart';
+import 'package:tick_it/features/todo/data/services/todo_api_service.dart';
 import 'package:tick_it/features/verify_otp/cubit/verify_otp_cubit.dart';
 import 'package:tick_it/features/verify_otp/data/repos/verify_otp_repo.dart';
 import 'package:tick_it/features/verify_otp/data/services/verify_otp_api_service.dart';
@@ -46,4 +49,9 @@ Future<void> setupGetIt() async {
 
   // 4. Home
   getIt.registerFactory<HomeCubit>(() => HomeCubit(getIt()));
+
+  // 5. Todo Feature
+  getIt.registerLazySingleton<TodoApiService>(() => TodoApiService(getIt()));
+  getIt.registerLazySingleton<TodoRepo>(() => TodoRepo(getIt()));
+  getIt.registerFactory<TodoCubit>(() => TodoCubit(getIt()));
 }

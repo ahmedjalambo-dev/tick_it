@@ -3,6 +3,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tick_it/core/routes/my_routes.dart';
 import 'package:tick_it/features/home/cubit/home_cubit.dart';
 import 'package:tick_it/features/home/cubit/home_state.dart';
+import 'package:tick_it/features/todo/cubit/todo_cubit.dart';
+import 'package:tick_it/features/todo/cubit/todo_state.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -10,7 +12,6 @@ class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocListener<HomeCubit, HomeState>(
-      // Listen for the LoggedOut state to navigate
       listener: (context, state) {
         state.whenOrNull(
           loggedOut: () => Navigator.pushNamedAndRemoveUntil(
@@ -19,34 +20,103 @@ class HomeScreen extends StatelessWidget {
             (route) => false,
           ),
           error: (message) => ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text("Logout Error: $message"),
-              backgroundColor: Colors.red,
-            ),
+            SnackBar(content: Text(message), backgroundColor: Colors.red),
           ),
         );
       },
       child: Scaffold(
         appBar: AppBar(
-          title: const Text("Home"),
+          title: const Text("Welcome to Tick It!"),
           actions: [
-            // This is the trigger for the Sign Out feature
             IconButton(
               icon: const Icon(Icons.logout),
               onPressed: () => context.read<HomeCubit>().logout(),
             ),
           ],
         ),
-        body: const Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text("You are logged in!", style: TextStyle(fontSize: 24)),
-              SizedBox(height: 16),
-              Text("Tap the icon above to sign out."),
-            ],
-          ),
+        floatingActionButton: FloatingActionButton(
+          onPressed: () => _showAddDialog(context),
+          child: const Icon(Icons.add),
         ),
+        body: BlocBuilder<TodoCubit, TodoState>(
+          builder: (context, state) {
+            return state.maybeWhen(
+              loading: () => const Center(child: CircularProgressIndicator()),
+              error: (msg) => Center(child: Text(msg)),
+              loaded: (todos) {
+                if (todos.isEmpty) {
+                  return const Center(child: Text("No todos yet! Add one."));
+                }
+                return ListView.separated(
+                  padding: const EdgeInsets.all(16),
+                  itemCount: todos.length,
+                  separatorBuilder: (_, __) => const SizedBox(height: 8),
+                  itemBuilder: (context, index) {
+                    final todo = todos[index];
+                    return Dismissible(
+                      key: Key(todo.id.toString()),
+                      background: Container(color: Colors.red),
+                      onDismissed: (_) {
+                        context.read<TodoCubit>().deleteTodo(todo.id);
+                      },
+                      child: Card(
+                        child: CheckboxListTile(
+                          title: Text(
+                            todo.title,
+                            style: TextStyle(
+                              decoration: todo.isCompleted
+                                  ? TextDecoration.lineThrough
+                                  : null,
+                              color: todo.isCompleted
+                                  ? Colors.grey
+                                  : Colors.white,
+                            ),
+                          ),
+                          value: todo.isCompleted,
+                          onChanged: (_) {
+                            context.read<TodoCubit>().toggleTodo(todo);
+                          },
+                        ),
+                      ),
+                    );
+                  },
+                );
+              },
+              orElse: () => const SizedBox.shrink(),
+            );
+          },
+        ),
+      ),
+    );
+  }
+
+  void _showAddDialog(BuildContext context) {
+    final controller = TextEditingController();
+    showDialog(
+      context: context,
+      builder: (dialogContext) => AlertDialog(
+        title: const Text("Add Todo"),
+        content: TextField(
+          controller: controller,
+          decoration: const InputDecoration(hintText: "What needs to be done?"),
+          autofocus: true,
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(dialogContext),
+            child: const Text("Cancel"),
+          ),
+          ElevatedButton(
+            onPressed: () {
+              if (controller.text.isNotEmpty) {
+                // Access the cubit from the parent context
+                context.read<TodoCubit>().addTodo(controller.text);
+                Navigator.pop(dialogContext);
+              }
+            },
+            child: const Text("Add"),
+          ),
+        ],
       ),
     );
   }
